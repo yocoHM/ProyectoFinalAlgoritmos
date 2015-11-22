@@ -1,6 +1,7 @@
 #include "nodoB.h"
 #include <iomanip>
 #include <iostream>
+#include <QPropertyAnimation>
 #include <QGraphicsScene>
 
 template <class T>

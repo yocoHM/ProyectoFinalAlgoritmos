@@ -5,10 +5,9 @@
 #include <QDebug>
 #include <QGraphicsItem>
 #include <iostream>
-#include "edge.h"
 
 template <class T>
-class NodoDosTres: public QGraphicsItem {
+class NodoDosTres: public QGraphicsWidget {
   bool hasSmall = false;
   bool hasHigh = false;
   bool full = false;
@@ -21,12 +20,9 @@ class NodoDosTres: public QGraphicsItem {
   NodoDosTres<T>* derecho = nullptr;
   NodoDosTres<T>* temp = nullptr;
 
-
-  Edge<T> * edgeDerecha = nullptr;
-  Edge<T> * edgeIzquierda = nullptr;
   bool pressed;
   int index;
-  double x,y;
+  qreal x = 0.0, y = 0.0;
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -54,15 +50,6 @@ protected:
     {
         switch (change) {
         case ItemPositionHasChanged:
-            if(edgeIzquierda)
-                edgeIzquierda->adjust();
-            if(edgeDerecha)
-                edgeDerecha->adjust();
-    //        edgeIzquierda->adjust();
-    //        edgeDerecha->adjust();
-    //        foreach (Edge<T> *edge, edgeList)
-    //            edge->adjust();
-            //graph->itemMoved();
             break;
         default:
             break;
@@ -72,37 +59,28 @@ protected:
     }
 
 public:
-  void setCoordinates(int x,int y){
+  void setCoordinates(qreal x,qreal y){
       this->x = x;
       this->y = y;
       setPos(x,y);
   }
 
-  void setX(int x){
+  void setX(qreal x){
       this->x = x;
   }
 
-  void setY(int y){
+  void setY(qreal y){
       this->y = y;
   }
 
-  int getX(){
+  qreal getX(){
       return x;
   }
 
-  int getY(){
+  qreal getY(){
       return y;
   }
 
-  void addEdgeDerecha(Edge<T> *edge){
-      this->edgeIzquierda = edge;
-      edge->adjust();
-  }
-
-  void addEdgeIzquierda(Edge<T> *edge){
-      this->edgeDerecha = edge;
-      edge->adjust();
-  }
 
   void setIndex(int index){
       this->index = index;
@@ -143,7 +121,6 @@ public:
 
   void borrar(QGraphicsScene *scene) {
       scene->removeItem(this);
-      //borrarEdges(scene);
       delete this;
   }
 
@@ -413,20 +390,6 @@ public:
     return !menor && !mayor;
   }
 
-//  bool esCentro()
-//  {
-//      if(this->centro->padre != nullptr){
-//          if (this == padre->centro->centro){
-//              return true;
-//          }
-//          else {
-//              return false;
-//          }
-//      }
-//      else{
-//          return false;
-//      }
-//  }
 
 };
 

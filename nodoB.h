@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <QGraphicsItem>
+#include <QGraphicsWidget>
 #include <iostream>
 #include <QList>
 #include "edge.h"
@@ -14,7 +15,7 @@ template <class T>
 std::ostream& operator<<(std::ostream&, NodoB<T>&);
 
 template <class T>
-class NodoB: public QGraphicsItem{
+class NodoB: public QGraphicsWidget{
     T info;
     NodoB<T> * derecho;
     NodoB<T> * izquierdo;
@@ -24,7 +25,7 @@ class NodoB: public QGraphicsItem{
 
     bool pressed;
     int index;
-    double x,y;
+    qreal x = 0.0, y = 0.0;
     bool enc;
 
     /***************************************AVL**********************************************/
@@ -47,9 +48,9 @@ public:
     void borrar(QGraphicsScene *scene);
     ~NodoB();
 
-    void setCoordinates(int x,int y);
-    void setX(int x);
-    void setY(int y);
+    void setCoordinates(qreal x,qreal y);
+    void setX(qreal x);
+    void setY(qreal y);
     int getX();
     int getY();
 
@@ -141,7 +142,7 @@ QList<Edge<T> *> NodoB<T>::edges() const
 
 
 template <class T>
-void NodoB<T>::setCoordinates(int x,int y){
+void NodoB<T>::setCoordinates(qreal x,qreal y){
     this->x = x;
     this->y = y;
     setPos(x,y);
@@ -149,12 +150,12 @@ void NodoB<T>::setCoordinates(int x,int y){
 
 
 template <class T>
-void NodoB<T>::setX(int x){
+void NodoB<T>::setX(qreal x){
     this->x = x;
 }
 
 template <class T>
-void NodoB<T>::setY(int y){
+void NodoB<T>::setY(qreal y){
     this->y = y;
 }
 

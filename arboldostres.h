@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 
+#include <QPropertyAnimation>
 #include <QGraphicsScene>
 
 template <class T>
@@ -19,7 +20,6 @@ protected:
 public:
   //- - - - - Constructores - - - - -
   ArbolDosTres() { }
-  //ArbolDosTres(QGraphicsScene * scene);
 
   //- - - - - Destructor - - - - -
   ~ArbolDosTres();
@@ -60,7 +60,7 @@ public:
   void esHoja();
   void ancestros(NodoDosTres<T> * nodo) const;
   void ordenar(T a[], int N);
-  void asignarPosNormal(int nivel, int index, NodoDosTres<T> * temp, QGraphicsScene * grafica, double & x);
+  void asignarPosNormal(int nivel, int index, NodoDosTres<T> * temp, QGraphicsScene * grafica, qreal & x);
 
   //- - - - - Bools - - - - -
   bool empty();
@@ -81,18 +81,9 @@ public:
   NodoDosTres<T>* encontrarNodoABorrar(NodoDosTres<T>*, T info);
 
   void bfs(QGraphicsScene * grafica);
+  void animacionMov(qreal & xInicial, qreal & yInicial, qreal & xFinal, qreal & yFinal, NodoDosTres<T> * nodo);
 
 };
-//- - - - - Constructor - - - - -
-//template <class T>
-//ArbolDosTres<T>::ArbolDosTres(QGraphicsScene * scene)
-//{
-//    raiz = nullptr;
-//    nivelesHoja;
-//    escena = scene;
-
-//}
-
 //- - - - - Destructor - - - - -
 template <class T>
 ArbolDosTres<T>::~ArbolDosTres()
@@ -948,17 +939,17 @@ NodoDosTres<T>* ArbolDosTres<T>::encontrarNodoABorrar(NodoDosTres<T>* nodo, T in
 }
 
 template<class T>
-void ArbolDosTres<T>::asignarPosNormal(int nivel, int index, NodoDosTres<T> * temp, QGraphicsScene * grafica, double & x){
+void ArbolDosTres<T>::asignarPosNormal(int nivel, int index, NodoDosTres<T> * temp, QGraphicsScene * grafica, qreal & x){
 
     nivel = this->getNivel(temp);//se obtiene el nivel del nodo
     index = temp->getIndex();//se obtiene el indice del nodo
 
     //parte de arriba de la formula para obtener la posicion en x.
     //index * widthOfWindow
-    double numerador = index * (grafica->width()+300);
+    qreal numerador = index * (grafica->width()+300);
     //parte de abajo de la formula para obtener la posicion en x.
     //(2^nivel) + 1
-    double denominador = pow(2.0, double(nivel)) + 1;
+    qreal denominador = pow(2.0, double(nivel)) + 1;
     //division de la parte de arriba entre la de abajo para obtener
     //la posicion en x que va a llevar el nodo
     x = numerador / denominador;
@@ -970,20 +961,20 @@ void ArbolDosTres<T>::bfs(QGraphicsScene * grafica) {
     std::vector<NodoDosTres<T> *> cola;
     int nivel = 0; //nivel del nodo
     int index = 0; //index del nodo
+    qreal xInicial = 0.0;
+    qreal yInicial = 0.0;
 
     cola.push_back(this->raiz);
 
-    std::cout << "- - - - -" << std::endl;
-
     while(!cola.empty()){
         NodoDosTres<T> * temp = cola[0];
-        double x = 0.0;
+        qreal x = 0.0;
 
         if(temp->getPadre() != nullptr){
             if (temp->getPadre()->getCentro() != nullptr){
 
                 if (temp->getPadre()->getCentro() == temp){
-                    x = temp->getPadre()->scenePos().x();
+                    x = temp->getPadre()->getX();
                 }
                 else{
                     asignarPosNormal(nivel, index, temp, grafica, x);
@@ -994,10 +985,10 @@ void ArbolDosTres<T>::bfs(QGraphicsScene * grafica) {
             else if (temp->getPadre() != nullptr && temp->getPadre()->getPadre() != nullptr){
                 if (temp->getPadre()->getPadre()->getX() == temp->getPadre()->getX()){
                     if(temp == temp->getPadre()->getIzquierdo()){
-                        x = temp->getPadre()->scenePos().x() - 50;
+                        x = temp->getPadre()->getX()- 50;
                     }
                     else if (temp == temp->getPadre()->getDerecho()){
-                        x = temp->getPadre()->scenePos().x() + 50;
+                        x = temp->getPadre()->getX() + 50;
                     }
                 }
                 else{
@@ -1014,13 +1005,12 @@ void ArbolDosTres<T>::bfs(QGraphicsScene * grafica) {
         }
 
         //altura que va a llevar el nodo
-        double y = 0.0;
+        qreal y = 0.0;
 
         //cuando existe un padre entra al if
         if (temp->getPadre() != nullptr){
             //se toma la altura del padre
-            double altura = temp->getPadre()->scenePos().y();
-            //double altura = temp->getPadre()->getY();
+            qreal altura = temp->getPadre()->getY();
             //se le suma 50 a la altura anterior y se le asigna al nodo
             y = altura + 50;
         }
@@ -1029,6 +1019,7 @@ void ArbolDosTres<T>::bfs(QGraphicsScene * grafica) {
         //QPoint coor()
         temp->setCoordinates(x,y);
 
+        animacionMov(xInicial, yInicial, x, y, temp);
 
         cola.erase(cola.begin());
 
@@ -1058,6 +1049,20 @@ void ArbolDosTres<T>::bfs(QGraphicsScene * grafica) {
 
     }
 
+}
+
+template <class T>
+void ArbolDosTres<T>::animacionMov(qreal & xInicial, qreal & yInicial, qreal & xFinal, qreal & yFinal, NodoDosTres<T> * nodo)
+{
+    // Aqui crea la animación
+    QPointF puntoA = QPointF(xInicial, yInicial);
+    QPointF puntoB = QPointF(xFinal, yFinal);
+
+    QPropertyAnimation * animation = new QPropertyAnimation(nodo, "pos");
+    animation->setDuration(500); //2 Segundos
+    animation->setStartValue(puntoA);
+    animation->setEndValue(puntoB);
+    animation->start();
 }
 
 #endif // ARBOLDOSTRES

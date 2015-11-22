@@ -4,11 +4,10 @@
 #include <math.h>
 
 #include <iostream>
-//#include <QGraphicsScene>
 
 template <class T>
 class AVLTree : public BinarySTree<T>{
-    //QGraphicsScene *scene;
+
 public:
     AVLTree(){}
     ~AVLTree();
@@ -19,9 +18,10 @@ public:
     void rl_rotation(NodoB<T> * node);
     bool isAVL(NodoB<T> * node);
     void insert(NodoB<T> * parent, NodoB<T> * node);
-    void insert(NodoB<T> *node);
+    void insert(NodoB<T> * node);
     void remove(T value);
     void bfs();
+    void animacionMov(qreal & xInicial, qreal & yInicial, qreal & xFinal, qreal & yFinal, NodoB<T> * nodo);
 
 
 
@@ -104,7 +104,7 @@ void AVLTree<T>::l_rotation(NodoB<T> * pivot){
     if(pivot->getDerecho())
         pivot->getDerecho()->setPadre(pivot);
 
-    std::cout << "Hola" << std::endl;
+    //std::cout << "Hola" << std::endl;
 }
 
 template <class T>
@@ -341,10 +341,16 @@ void AVLTree<T>::bfs() {
     std::vector<NodoB<T> *> cola;
     int nivel = 0; //nivel del nodo
     int index = 0; //index del nodo
+    qreal xInicial = 0.0;
+    qreal yInicial = 0.0;
 
     cola.push_back(this->root);
+
     while(!cola.empty()){
         NodoB<T> * temp = cola[0];
+        xInicial = temp->getX();
+        yInicial = temp->getY();
+
         temp->borrarEdges(this->scene);
         nivel = this->getLevel(temp);//se obtiene el nivel del nodo
         index = temp->getIndex();//se obtiene el indice del nodo
@@ -352,32 +358,31 @@ void AVLTree<T>::bfs() {
         //parte de arriba de la formula para obtener la posicion en x.
         //index * widthOfWindow
 
-        double numerador = index * (this->scene->width()+100);
+        qreal numerador = index * (this->scene->width()+100);
         //parte de abajo de la formula para obtener la posicion en x.
         //(2^nivel) + 1
-        double denominador = pow(2.0, double(nivel)) + 1;
+        qreal denominador = pow(2.0, double(nivel)) + 1;
         //division de la parte de arriba entre la de abajo para obtener
         //la posicion en x que va a llevar el nodo
-        double x = numerador / denominador;
+        qreal x = numerador / denominador;
 
         //altura que va a llevar el nodo
-        double y = 0.0;
+        qreal y = 0.0;
 
         //cuando existe un padre entra al if
         if (temp->getPadre() != NULL){
             //temp->getPadre()->borrarEdges();
             //se toma la altura del padre
-            double altura = temp->getPadre()->scenePos().y();
-            //double altura = temp->getPadre()->getY();
+            qreal altura = temp->getPadre()->getY();
             //se le suma 50 a la altura anterior y se le asigna al nodo
             y = altura + 50;
             this->scene->addItem(new Edge<T>(temp, temp->getPadre()));
         }
 
         //se asignan las coordenadas del nodo para que se dibuje correctamente
-        //QPoint coor()
         temp->setCoordinates(x,y);
 
+        animacionMov(xInicial, yInicial, x, y, temp);
 
         cola.erase(cola.begin());
 
@@ -406,5 +411,18 @@ void AVLTree<T>::bfs() {
 
 }
 
+template <class T>
+void AVLTree<T>::animacionMov(qreal & xInicial, qreal & yInicial, qreal & xFinal, qreal & yFinal, NodoB<T> * nodo)
+{
+    // Aqui crea la animación
+    QPointF puntoA = QPointF(xInicial, yInicial);
+    QPointF puntoB = QPointF(xFinal, yFinal);
+
+    QPropertyAnimation * animation = new QPropertyAnimation(nodo, "pos");
+    animation->setDuration(500); //2 Segundos
+    animation->setStartValue(puntoA);
+    animation->setEndValue(puntoB);
+    animation->start();
+}
 
 

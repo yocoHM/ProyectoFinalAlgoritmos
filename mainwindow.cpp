@@ -200,7 +200,15 @@ void MainWindow::on_botonLeer_clicked()
 
     QString nomArchivo = ui->boxArchivo->toPlainText();
     std::string nombreArchivo = nomArchivo.toStdString();
-    std::string ruta = home + "/Desktop/" + nombreArchivo + ".txt";
+
+    std::string ruta = "";
+
+    if (nombreArchivo.rfind(".txt") != -1) {
+        ruta = home + "/Desktop/" + nombreArchivo;
+    }
+    else {
+        ruta = home + "/Desktop/" + nombreArchivo + ".txt";
+    }
 
     LectorArchivos lector;
     std::vector<int> datos = lector.leer(ruta);
