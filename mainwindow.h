@@ -6,9 +6,11 @@
 #include <QDialog>
 #include <QtGui>
 #include <QtCore>
+#include <QDir>
 #include "nodoB.h"
 #include "rojinegro.h"
 #include "arboldostres.h"
+#include "lectorarchivos.h"
 
 
 template <class T> class NodoB;
@@ -40,6 +42,8 @@ private slots:
     void on_borrar_released();
 
     void on_comboBox_currentIndexChanged(int index);
+
+    void on_botonLeer_clicked();
 
 private:
     QGraphicsScene *scene;

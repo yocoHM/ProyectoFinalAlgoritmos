@@ -191,3 +191,45 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
     //avl->clear();
     std::cout << index << endl;
 }
+
+void MainWindow::on_botonLeer_clicked()
+{
+    QDir directorio;
+    QString dir = directorio.homePath();
+    std::string home = dir.toStdString();
+
+    QString nomArchivo = ui->boxArchivo->toPlainText();
+    std::string nombreArchivo = nomArchivo.toStdString();
+    std::string ruta = home + "/Desktop/" + nombreArchivo + ".txt";
+
+    LectorArchivos lector;
+    std::vector<int> datos = lector.leer(ruta);
+
+    switch (currentArbol){
+    case 1:{
+        // Avl
+        for(int i = 0; i < datos.size(); i++){
+            NodoB<int> *nuevo = new NodoB<int>(datos[i]);
+            avl->insert(nuevo);
+        }
+        break;
+    }
+    case 2:{
+        //Rojinegro
+        for(int i = 0; i < datos.size(); i++){
+            NodoB<int> *nuevo = new NodoB<int>(datos[i]);
+            rojinegro->RBinsert(nuevo);
+        }
+        break;
+    }
+    case 3:{
+        //2/3
+        for(int i = 0; i < datos.size(); i++){
+            NodoDosTres<int>*nuevo = new NodoDosTres<int>(datos[i]);
+            dosTres->insertar23(nuevo);
+        }
+        break;
+    }
+    }
+
+}

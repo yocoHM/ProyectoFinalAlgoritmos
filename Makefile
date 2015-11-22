@@ -49,9 +49,11 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = main.cpp \
-		mainwindow.cpp moc_mainwindow.cpp
+		mainwindow.cpp \
+		lectorarchivos.cpp moc_mainwindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
+		lectorarchivos.o \
 		moc_mainwindow.o
 DIST          = ../../Qt/5.5/clang_64/mkspecs/features/spec_pre.prf \
 		../../Qt/5.5/clang_64/mkspecs/qdevice.pri \
@@ -204,8 +206,10 @@ DIST          = ../../Qt/5.5/clang_64/mkspecs/features/spec_pre.prf \
 		edge.h \
 		rojinegro.h \
 		arboldostres.h \
-		nododostres.h main.cpp \
-		mainwindow.cpp
+		nododostres.h \
+		lectorarchivos.h main.cpp \
+		mainwindow.cpp \
+		lectorarchivos.cpp
 QMAKE_TARGET  = proyecto-final
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = proyecto-final.app/Contents/MacOS/proyecto-final
@@ -573,8 +577,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h nodoB.h BinarySTree.h BinaryTree.h avl.h edge.h rojinegro.h arboldostres.h nododostres.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h nodoB.h BinarySTree.h BinaryTree.h avl.h edge.h rojinegro.h arboldostres.h nododostres.h lectorarchivos.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindow.cpp lectorarchivos.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
@@ -871,6 +875,7 @@ moc_mainwindow.cpp: ../../Qt/5.5/clang_64/lib/QtWidgets.framework/Headers/QMainW
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/qvector.h \
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/qxmlstream.h \
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/qtcoreversion.h \
+		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/QDir \
 		nodoB.h \
 		../../Qt/5.5/clang_64/lib/QtGui.framework/Headers/QPainter \
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/QDebug \
@@ -886,6 +891,7 @@ moc_mainwindow.cpp: ../../Qt/5.5/clang_64/lib/QtWidgets.framework/Headers/QMainW
 		BinaryTree.h \
 		arboldostres.h \
 		NodoDosTres.h \
+		lectorarchivos.h \
 		mainwindow.h
 	/Users/Yoco/Qt/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Yoco/Qt/5.5/clang_64/mkspecs/macx-clang -I/Users/Yoco/Desktop/Protecto-Final-master -I/Users/Yoco/Qt/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Users/Yoco/Qt/5.5/clang_64/lib/QtGui.framework/Headers -I/Users/Yoco/Qt/5.5/clang_64/lib/QtCore.framework/Headers -F/Users/Yoco/Qt/5.5/clang_64/lib mainwindow.h -o moc_mainwindow.cpp
 
@@ -1177,6 +1183,7 @@ main.o: main.cpp mainwindow.h \
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/qvector.h \
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/qxmlstream.h \
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/qtcoreversion.h \
+		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/QDir \
 		nodoB.h \
 		../../Qt/5.5/clang_64/lib/QtGui.framework/Headers/QPainter \
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/QDebug \
@@ -1192,6 +1199,7 @@ main.o: main.cpp mainwindow.h \
 		BinaryTree.h \
 		arboldostres.h \
 		NodoDosTres.h \
+		lectorarchivos.h \
 		../../Qt/5.5/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		../../Qt/5.5/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
 		../../Qt/5.5/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
@@ -1587,6 +1595,7 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/qvector.h \
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/qxmlstream.h \
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/qtcoreversion.h \
+		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/QDir \
 		nodoB.h \
 		../../Qt/5.5/clang_64/lib/QtGui.framework/Headers/QPainter \
 		../../Qt/5.5/clang_64/lib/QtCore.framework/Headers/QDebug \
@@ -1602,8 +1611,12 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		BinaryTree.h \
 		arboldostres.h \
 		NodoDosTres.h \
+		lectorarchivos.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
+
+lectorarchivos.o: lectorarchivos.cpp lectorarchivos.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o lectorarchivos.o lectorarchivos.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
